@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver API Frontend</title>
+</head>
+<body>
+  <h1>Driver API Frontend</h1>
+
+  <h2>Add Driver</h2>
+  <form id="addDriverForm">
+    <label for="addDriverName">Name:</label>
+    <input type="text" id="addDriverName" required><br>
+    <label for="addDriverPhone">Phone:</label>
+    <input type="text" id="addDriverPhone" required><br>
+    <label for="addDriverLicense">License Number:</label>
+    <input type="text" id="addDriverLicense" required><br>
+    <button type="submit">Add Driver</button>
+  </form>
+  <pre id="addDriverResponse"></pre>
+
+  <h2>Get Driver By Name</h2>
+  <form id="getDriverByNameForm">
+    <label for="getDriverByName">Name:</label>
+    <input type="text" id="getDriverByName" required><br>
+    <button type="submit">Get Driver</button>
+  </form>
+  <pre id="getDriverByNameResponse"></pre>
+
+  <h2>Get Multiple Drivers By Name</h2>
+  <form id="getMultipleDriversByNameForm">
+    <label for="getMultipleDriversByName">Names (comma-separated):</label>
+    <input type="text" id="getMultipleDriversByName" required><br>
+    <button type="submit">Get Multiple Drivers</button>
+  </form>
+  <pre id="getMultipleDriversByNameResponse"></pre>
+
+  <h2>Get Driver Balance</h2>
+  <form id="getDriverBalanceForm">
+    <label for="getDriverBalance">Phone:</label>
+    <input type="text" id="getDriverBalance" required><br>
+    <button type="submit">Get Balance</button>
+  </form>
+  <pre id="getDriverBalanceResponse"></pre>
+
+  <h2>Pay Balance</h2>
+  <form id="payBalanceForm">
+    <label for="payBalancePhone">Phone:</label>
+    <input type="text" id="payBalancePhone" required><br>
+    <label for="payBalanceAmount">Amount:</label>
+    <input type="number" id="payBalanceAmount" required><br>
+    <button type="submit">Pay Balance</button>
+  </form>
+  <pre id="payBalanceResponse"></pre>
+
+  <h2>Subscribe</h2>
+  <form id="subscribeForm">
+    <label for="subscribePhone">Phone:</label>
+    <input type="text" id="subscribePhone" required><br>
+    <label for="subscribeAmount">Subscription Amount:</label>
+    <input type="number" id="subscribeAmount" required><br>
+    <button type="submit">Subscribe</button>
+  </form>
+  <pre id="subscribeResponse"></pre>
+
+  <h2>Get Transaction History</h2>
+  <form id="getTransactionHistoryForm">
+    <label for="getTransactionHistory">Phone:</label>
+    <input type="text" id="getTransactionHistory" required><br>
+    <button type="submit">Get Transaction History</button>
+  </form>
+  <pre id="getTransactionHistoryResponse"></pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    document.getElementById('addDriverForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const name = document.getElementById('addDriverName').value;
+      const phone = document.getElementById('addDriverPhone').value;
+      const licenseNumber = document.getElementById('addDriverLicense').value;
+      try {
+        const response = await axios.post('http://localhost:3000/AddDriver', {
+          name: name,
+          phone: phone,
+          licenseNumber: licenseNumber
+        });
+        document.getElementById('addDriverResponse').textContent = JSON.stringify(response.data, null, 2);
+      } catch (error) {
+        document.getElementById('addDriverResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+      }
+    });
+
+    document.getElementById('getDriverByNameForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const name = document.getElementById('getDriverByName').value;
+      try {
+        const response = await axios.get(`http://localhost:3000/DriverByName/${name}`);
+        document.getElementById('getDriverByNameResponse').textContent = JSON.stringify(response.data, null, 2);
+      } catch (error) {
+        document.getElementById('getDriverByNameResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+      }
+    });
+
+    document.getElementById('getMultipleDriversByNameForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const names = document.getElementById('getMultipleDriversByName').value.split(',').map(name => name.trim());
+      try {
+        const response = await axios.post('http://localhost:3000/MultipleByName', {
+          names: names
+        });
+        document.getElementById('getMultipleDriversByNameResponse').textContent = JSON.stringify(response.data, null, 2);
+      } catch (error) {
+        document.getElementById('getMultipleDriversByNameResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+      }
+    });
+
+    document.getElementById('getDriverBalanceForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const phone = document.getElementById('getDriverBalance').value;
+      try {
+        const response = await axios.get(`http://localhost:3000/Balance/${phone}`);
+        document.getElementById('getDriverBalanceResponse').textContent = JSON.stringify(response.data, null, 2);
+      } catch (error) {
+        document.getElementById('getDriverBalanceResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+      }
+    });
+
+    document.getElementById('payBalanceForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const phone = document.getElementById('payBalancePhone').value;
+      const amount = document.getElementById('payBalanceAmount').value;
+      try {
+        const response = await axios.post('http://localhost:3000/PayBalance', {
+          phone: phone,
+          amount: amount
+        });
+        document.getElementById('payBalanceResponse').textContent = JSON.stringify(response.data, null, 2);
+      } catch (error) {
+        document.getElementById('payBalanceResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+      }
+    });
+
+    document.getElementById('subscribeForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const phone = document.getElementById('subscribePhone').value;
+      const subscriptionAmount = document.getElementById('subscribeAmount').value;
+      try {
+        const response = await axios.post('http://localhost:3000/Subscribe', {
+          phone: phone,
+          subscriptionAmount: subscriptionAmount
+        });
+        document.getElementById('subscribeResponse').textContent = JSON.stringify(response.data, null, 2);
+      } catch (error) {
+        document.getElementById('subscribeResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+      }
+    });
+
+    document.getElementById('getTransactionHistoryForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const phone = document.getElementById('getTransactionHistory').value;
+      try {
+        const response = await axios.get(`http://localhost:3000/TransactionHistory/${phone}`);
+        document.getElementById('getTransactionHistoryResponse').textContent = JSON.stringify(response.data, null, 2);
+      } catch (error) {
+        document.getElementById('getTransactionHistoryResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+      }
+    });
+  </script>
+</body>
+</html>

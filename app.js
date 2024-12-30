@@ -2,6 +2,7 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 const dbConfig = require('./atlas_url');
 const generateInvoice = require('./Proformainvoice');
+//const path = require('path');//html
 
 const app = express();
 app.use(express.json()); // to use the request body as JSON
@@ -34,6 +35,11 @@ MongoClient.connect(dbConfig.url)
     console.error('Error connecting to MongoDB:', err);
   });
 
+  // Serve the HTML file
+/*app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+*/
 // Define routes
 app.post("/AddDriver", async (request, response) => {
   if (!isConnected) {
