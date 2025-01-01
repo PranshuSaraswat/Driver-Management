@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans</title>
+    <link rel="stylesheet" href="subscribe.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Handle form submission
+        document.getElementById('subscribeForm').addEventListener('submit', async function(event) {
+          event.preventDefault();
+          const phone = document.getElementById('subscribePhone').value;
+          const subscriptionAmount = parseInt(document.querySelector('input[name="subscription"]:checked').value, 10); // Get selected subscription amount
+
+          try {
+            const response = await axios.post('http://localhost:3000/Subscribe', {
+              phone: phone,
+              subscriptionAmount: subscriptionAmount
+            });
+            document.getElementById('subscribeResponse').textContent = JSON.stringify(response.data, null, 2);
+          } catch (error) {
+            document.getElementById('subscribeResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+          }
+        });
+      });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Choose Your Subscription Plan!</h1>
+        <form id="subscribeForm">
+            <div class="plans">
+                <!-- Plan 500 -->
+                <div class="plan">
+                    <h2>₹ 500</h2>
+                    <p>VALUE PACK</p>
+                    <input type="radio" id="plan500" name="subscription" value="500" required>
+                    <label for="plan500">Select</label>
+                </div>
+                <!-- Plan 1000 -->
+                <div class="plan">
+                    <h2>₹ 1000</h2>
+                    <p>PREMIUM PACK</p>
+                    <input type="radio" id="plan1000" name="subscription" value="1000" required>
+                    <label for="plan1000">Select</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="subscribePhone">Phone Number</label>
+                <input type="tel" id="subscribePhone" name="phone" required>
+            </div>
+            <button type="submit">SUBSCRIBE</button>
+        </form>
+        <div id="subscribeResponse" class="response"></div>
+    </div>
+</body>
+</html>

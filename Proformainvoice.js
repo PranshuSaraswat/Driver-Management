@@ -1,7 +1,7 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
-const generateMail = require('./mailInvoice'); // Ensure this file has the correct path
+const generateMail = require('./mailInvoice');
 
 async function generateInvoice(driver, transactionType, amount, expireAt) {
   const doc = new PDFDocument({
