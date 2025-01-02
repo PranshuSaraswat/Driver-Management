@@ -54,14 +54,14 @@ p {
 .taskbar a {
     text-decoration: none;
     color: white;
-    font-weight: bold;
+    font-weight: 500; /* Adjusted font weight for thinner letters */
     margin: 0 15px;
     transition: color 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .taskbar a:hover {
     color: #ccd5ae; /* Light greenish color on hover */
 }
-
-
-
