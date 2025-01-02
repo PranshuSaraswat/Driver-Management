@@ -11,7 +11,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('images/auto.png') no-repeat center center; /* Sets the background image */
+    background: url('auto.png') no-repeat center center; /* Sets the background image */
     background-size: cover; /* Ensures the image covers the entire background */
     color: white;
     
