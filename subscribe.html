@@ -19,7 +19,11 @@
               phone: phone,
               subscriptionAmount: subscriptionAmount
             });
-            document.getElementById('subscribeResponse').textContent = JSON.stringify(response.data, null, 2);
+
+             // Display the JSON message properly
+             const message = response.data.message;
+
+            document.getElementById('subscribeResponse').textContent = message;
           } catch (error) {
             document.getElementById('subscribeResponse').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
           }

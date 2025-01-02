@@ -13,7 +13,24 @@
           const name = document.getElementById('email').value; // Use email field for full name input
           try {
             const response = await axios.get(`http://localhost:3000/DriverByName/${name}`);
-            document.getElementById('response').textContent = JSON.stringify(response.data, null, 2);
+            const drivers = response.data.drivers;
+
+            if (drivers && drivers.length > 0) {
+              let driverHtml = '<h2>Driver Details</h2><ul>';
+              drivers.forEach(driver => {
+                driverHtml += `
+                  <li>
+                    <strong>Name:</strong> ${driver.name} <br>
+                    <strong>Phone:</strong> ${driver.phone} <br>
+                    <strong>License Number:</strong> ${driver.licenseNumber} <br>
+                    <strong>Balance:</strong> ₹${driver.balance.toFixed(2)}
+                  </li><hr>`;
+              });
+              driverHtml += '</ul>';
+              document.getElementById('response').innerHTML = driverHtml;
+            } else {
+              document.getElementById('response').textContent = response.data.message || 'Driver details not found.';
+            }
           } catch (error) {
             document.getElementById('response').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
           }

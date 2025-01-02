@@ -19,7 +19,11 @@
             phone: phone,
             licenseNumber: licenseNumber
           });
-          document.getElementById('response').textContent = JSON.stringify(response.data, null, 2);
+          
+          // Display the response in a readable format
+          const message = response.data.message;
+          document.getElementById('response').textContent = message;
+
         } catch (error) {
           document.getElementById('response').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
         }
