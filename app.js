@@ -224,7 +224,7 @@ app.post("/PayBalance/:phone", async (request, response) => {
         await saveTransactionHistory(phone, "payment", paymentAmount);
         //
         generateInvoice(driver, "Balance Payed", paymentAmount, new Date(Date.now() + 30 * 24 * 60 * 60 * 1000));
-        response.json({ message: 'Partial payment successful' });
+        response.json({ message: 'Partial payment successful',newBalance: newBalance });
       }
     } else {
       response.json({ message: 'Driver balance not found' });
