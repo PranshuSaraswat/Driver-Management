@@ -8,20 +8,25 @@ body {
     text-align: center;
 }
 
-/* Header */
-h1 {
-    margin: 20px 0;
-    color: #fff;
-}
-
-/* Centering Container */
+/* Container */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh; /* Full viewport height */
-    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Header */
+h1 {
+    font-size: 36px;
+    color: #fff;
+    margin: 20px 0;
+    margin-bottom: 40px;
 }
 
 /* Plans Section */
@@ -29,34 +34,40 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center; /* Vertically centers items */
-    gap: 70px; /* Spacing between plans */
+    gap: 20px; /* Spacing between plans */
     margin-top: 20px;
     flex-wrap: wrap; /* Ensures proper layout for smaller screens */
 }
 
 .plan {
-    background-color: #ced4da; /* Light teal */
+    background: #fff;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    padding: 30px;
-    width: 300px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
+    padding: 20px;
+    width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .plan:hover {
     transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .plan h2 {
     margin: 0;
     color: #5e503f;
-    font-size: 22px;
+    font-size: 24px;
 }
 
 .plan p {
     font-size: 16px;
     color: #5e503f;
     margin: 10px 0;
+}
+
+.plan input[type="radio"] {
+    margin-top: 10px;
 }
 
 /* Input Group */
@@ -67,46 +78,42 @@ h1 {
     margin: 20px 0;
 }
 
-.phone-label {
+.input-group label {
     font-size: 16px;
     color: #fff;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
-.phone-input {
-    width: 250px; /* Adjust width */
-    padding: 10px; /* Add padding */
-    border-radius: 8px; /* Rounded corners */
+.input-group input[type="tel"] {
+    padding: 10px;
+    font-size: 14px;
     border: 1px solid #ccc;
-    outline: none;
-    font-size: 16px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 300px;
 }
 
-/* Subscribe Button */
-.subscribe-button {
-    display: inline-block;
-    margin-top: 20px;
+/* Button */
+button {
     padding: 10px 20px;
+    background: #4caf50;
+    color: #fff;
     border: none;
-    border-radius: 20px; /* Fully rounded edges */
-    background-color: #28a745; /* Green background */
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 16px;
+    transition: background 0.3s ease;
 }
 
-.subscribe-button:hover {
-    background-color: #218838; /* Darker green */
-    transform: scale(1.05); /* Slightly increase size on hover */
+button:hover {
+    background: #45a049;
 }
 
 /* Response Section */
 .response {
     margin-top: 20px;
-    color: #fff;
     font-size: 14px;
+    color: #333;
     white-space: pre-wrap;
     text-align: left;
     width: 80%;

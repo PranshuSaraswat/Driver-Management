@@ -18,13 +18,12 @@ body {
 }
 
 .form-container {
-  background-color: #ffffff;
+  background-color: #ccc;
   padding: 20px 30px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px;
   flex: 1; /* Make both forms take equal space */
-  padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -81,7 +80,7 @@ button:hover {
 input[type="tel"],
 input[type="number"] {
   width: 100%;
-  padding: 8px; /* Reduced padding */
+  padding: 6px; /* Reduced padding */
   font-size: 12px; /* Reduced font size */
   border: 1px solid #ccc;
   border-radius: 5px;
