@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="getDriver.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('getDriverByNameForm').addEventListener('submit', async function(event) {
+          event.preventDefault();
+          const name = document.getElementById('email').value; // Use email field for full name input
+          try {
+            const response = await axios.get(`http://localhost:3000/DriverByName/${name}`);
+            const drivers = response.data.drivers;
+
+            if (drivers && drivers.length > 0) {
+              let driverHtml = '<h2>Driver Details</h2><ul>';
+              drivers.forEach(driver => {
+                driverHtml += `
+                  <li>
+                    <strong>Name:</strong> ${driver.name} <br>
+                    <strong>Phone:</strong> ${driver.phone} <br>
+                    <strong>License Number:</strong> ${driver.licenseNumber} <br>
+                    <strong>Balance:</strong> ₹${driver.balance.toFixed(2)}
+                  </li><hr>`;
+              });
+              driverHtml += '</ul>';
+              document.getElementById('response').innerHTML = driverHtml;
+            } else {
+              document.getElementById('response').textContent = response.data.message || 'Driver details not found.';
+            }
+          } catch (error) {
+            document.getElementById('response').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+          }
+        });
+      });
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>GET DRIVER DETAILS</h1>
+            <form id="getDriverByNameForm">
+                <div class="input-group">
+                    <label for="email">FULL NAME</label>
+                    <input type="text" id="email" name="email" placeholder="Enter full name" required>
+                </div>
+                <button type="submit" class="login-btn">RETRIEVE</button>
+            </form>
+            <div id="response" class="response"></div>
+        </div>
+    </div>
+</body>
+</html>

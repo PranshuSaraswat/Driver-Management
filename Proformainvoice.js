@@ -1,9 +1,15 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
-const generateMail = require('./mailInvoice'); // Ensure this file has the correct path
+const generateMail = require('./mailInvoice');
 
 async function generateInvoice(driver, transactionType, amount, expireAt) {
+  // Ensure amount is a number
+  amount = parseFloat(amount);
+  if (isNaN(amount)) {
+    throw new Error('Invalid amount');
+  }
+
   const doc = new PDFDocument({
     size: 'A4',
     layout: 'portrait',

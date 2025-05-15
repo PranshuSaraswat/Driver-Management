@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="payment.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enable/Disable amount input based on payment option
+            document.querySelectorAll('input[name="payOption"]').forEach(option => {
+                option.addEventListener('change', function() {
+                    const amountInput = document.getElementById('payBalanceAmount');
+                    if (this.value === "partial") {
+                        amountInput.disabled = false;
+                    } else {
+                        amountInput.disabled = true;
+                        amountInput.value = ''; // Clear the amount input when disabled
+                    }
+                });
+            });
+
+            // Handle Check Dues form submission
+            document.getElementById('getDriverBalanceForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const phone = document.getElementById('getDriverBalance').value;
+                try {
+                    const response = await axios.get(`http://localhost:3000/Balance/${phone}`);
+                    const balanceData = response.data;
+
+                    if (balanceData) {
+                        let balanceHtml = '<h2>Driver Balance</h2><ul>';
+                        balanceHtml += `
+                            <li>
+                                <strong>Message:</strong> ${balanceData.message} <br>
+                                <strong>Balance:</strong> ₹${balanceData.balance ? balanceData.balance.toFixed(2) : 'N/A'}
+                            </li>`;
+                        balanceHtml += '</ul>';
+                        document.getElementById('getDriverBalanceResponse').innerHTML = balanceHtml;
+                    } else {
+                        document.getElementById('getDriverBalanceResponse').textContent = 'No balance information found.';
+                    }
+                } catch (error) {
+                    const errorMessage = error.response
+                        ? error.response.data.message || "An error occurred while processing your request."
+                        : "Could not connect to the server.";
+                    document.getElementById('getDriverBalanceResponse').textContent = errorMessage;
+                }
+            });
+
+            // Handle Pay Balance form submission
+            document.getElementById('payBalanceForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const phone = document.getElementById('payBalancePhone').value;
+                const payOption = document.querySelector('input[name="payOption"]:checked').value;
+                const amount = payOption === 'partial' ? document.getElementById('payBalanceAmount').value : null;
+
+                try {
+                    const response = await axios.post(`http://localhost:3000/PayBalance/${phone}`, {
+                        paymentAmount: amount,
+                        paymentType: payOption
+                    });
+                    const paymentData = response.data;
+
+                    if (paymentData) {
+                        let paymentHtml = '<h2>Payment Status</h2><ul>';
+                        paymentHtml += `
+                            <li>
+                                <strong>Message:</strong> ${paymentData.message} <br>
+                                <strong>New Balance:</strong> ₹${paymentData.newBalance ? paymentData.newBalance.toFixed(2) : 'N/A'}
+                            </li>`;
+                        paymentHtml += '</ul>';
+                        document.getElementById('payBalanceResponse').innerHTML = paymentHtml;
+                    } else {
+                        document.getElementById('payBalanceResponse').textContent = 'Payment information not found.';
+                    }
+                } catch (error) {
+                    const errorMessage = error.response
+                        ? error.response.data.message || "An error occurred while processing your request."
+                        : "Could not connect to the server.";
+                    document.getElementById('payBalanceResponse').textContent = errorMessage;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Check Dues Form -->
+        <div class="form-container" id="check-dues">
+            <h1>CHECK DUES</h1>
+            <form id="getDriverBalanceForm">
+                <div class="input-group">
+                    <label for="getDriverBalance">Phone:</label>
+                    <input type="tel" id="getDriverBalance" name="phone" required>
+                </div>
+                <button type="submit" class="login-btn">Check Dues</button>
+            </form>
+            <div id="getDriverBalanceResponse" class="response"></div>
+        </div>
+
+        <!-- Pay Balance Form -->
+        <div class="form-container" id="pay-balance">
+            <h1>PAY BALANCE</h1>
+            <form id="payBalanceForm">
+                <div class="input-group">
+                    <label for="payBalancePhone">Phone:</label>
+                    <input type="tel" id="payBalancePhone" name="pay-phone" required>
+                </div>
+                <div class="input-group">
+                    <label>Payment Option:</label>
+                    <label><input type="radio" name="payOption" value="full" required> Pay Full</label>
+                    <label><input type="radio" name="payOption" value="partial" required> Pay Partial</label>
+                </div>
+                <div class="input-group" id="partialPaymentGroup">
+                    <label for="payBalanceAmount">Amount:</label>
+                    <input type="number" id="payBalanceAmount" name="amount" disabled required>
+                </div>
+                <button type="submit" class="login-btn">Pay Balance</button>
+            </form>
+            <div id="payBalanceResponse" class="response"></div>
+        </div>
+    </div>
+</body>
+</html>

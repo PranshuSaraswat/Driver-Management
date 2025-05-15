@@ -1,10 +1,16 @@
 const express = require('express');
+const cors = require('cors'); // Import the cors package
 const { MongoClient } = require('mongodb');
 const dbConfig = require('./atlas_url');
 const generateInvoice = require('./Proformainvoice');
+const path = require('path');//html
 
 const app = express();
+app.use(cors()); // Use the cors middleware
 app.use(express.json()); // to use the request body as JSON
+
+// Serve static files from the current directory
+app.use(express.static(__dirname));
 
 let client;
 let db;
@@ -33,6 +39,11 @@ MongoClient.connect(dbConfig.url)
   .catch(err => {
     console.error('Error connecting to MongoDB:', err);
   });
+
+  // Serve the HTML file
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontPage.html'));
+});
 
 // Define routes
 app.post("/AddDriver", async (request, response) => {
@@ -213,7 +224,7 @@ app.post("/PayBalance/:phone", async (request, response) => {
         await saveTransactionHistory(phone, "payment", paymentAmount);
         //
         generateInvoice(driver, "Balance Payed", paymentAmount, new Date(Date.now() + 30 * 24 * 60 * 60 * 1000));
-        response.json({ message: 'Partial payment successful' });
+        response.json({ message: 'Partial payment successful',newBalance: newBalance });
       }
     } else {
       response.json({ message: 'Driver balance not found' });
@@ -303,8 +314,21 @@ app.get("/TransactionHistory/:phone", async (request, response) => {
   }
 
   try {
-    const collection = db.collection('transactionHistory');
-    const transactions = await collection.find({ phone: phone }).toArray();
+    const collection1 = db.collection(dbConfig.collectionName);
+    console.log(`Searching for driver with phone: ${phone}`);
+    const driver = await collection1.findOne({ phone: phone });
+
+    if (!driver) {
+      console.log(`Driver not found for phone: ${phone}`);
+      response.status(404).json({ error: 'Driver not found' });
+      return;
+    }
+
+    const driverId = driver._id;
+    console.log(`Driver found with ID: ${driverId}`);
+    const collection2 = db.collection(dbConfig.collectionName2);
+    const transactions = await collection2.find({ driverId: driverId }).toArray();
+
     if (transactions.length > 0) {
       response.json({ message: 'Transaction history found', transactions: transactions });
     } else {
@@ -315,6 +339,7 @@ app.get("/TransactionHistory/:phone", async (request, response) => {
     response.status(500).json({ error: 'Error getting transaction history' });
   }
 });
+
 
 
 // Export the app instance

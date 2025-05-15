@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <link rel="stylesheet" href="transHist.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('transactionHistoryForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const phone = document.getElementById('phone').value;
+                try {
+                    const response = await axios.get(`http://localhost:3000/TransactionHistory/${phone}`);
+                    if (response.data.transactions && response.data.transactions.length > 0) {
+                        const transactions = response.data.transactions;
+                        let transactionHtml = '<h2>Transaction History</h2><ul>';
+                        transactions.forEach(transaction => {
+                            transactionHtml += `
+                                <li>
+                                    <strong>Type:</strong> ${transaction.transactionType} <br>
+                                    <strong>Amount:</strong> ₹${transaction.amount} <br>
+                                    <strong>Date:</strong> ${new Date(transaction.timestamp).toLocaleString()}
+                                </li><hr>`;
+                        });
+                        transactionHtml += '</ul>';
+                        document.getElementById('response').innerHTML = transactionHtml;
+                    } else {
+                        document.getElementById('response').textContent = response.data.message || 'No transaction history found.';
+                    }
+                } catch (error) {
+                    document.getElementById('response').textContent = error.response ? JSON.stringify(error.response.data, null, 2) : error.message;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>TRANSACTION HISTORY</h1>
+        <form id="transactionHistoryForm" class="form">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+            <button type="submit">RETRIEVE</button>
+        </form>
+        <div id="response" class="response"></div>
+    </div>
+</body>
+</html>
