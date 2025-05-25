@@ -10,7 +10,13 @@ app.use(cors()); // Use the cors middleware
 app.use(express.json()); // to use the request body as JSON
 
 // Serve static files from the current directory
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Update CORS for React dev server:
+//app.use(cors({
+//  origin: 'http://localhost:3001' // React dev server
+//}));
+
 
 let client;
 let db;
@@ -42,7 +48,7 @@ MongoClient.connect(dbConfig.url)
 
   // Serve the HTML file
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontPage.html'));
+  res.sendFile(path.join(__dirname, '../frontend/frontPage.html'));
 });
 
 // Define routes
